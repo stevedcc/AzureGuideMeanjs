@@ -160,7 +160,10 @@ module.exports.initHelmetHeaders = function (app) {
  */
 module.exports.initModulesClientRoutes = function (app) {
   // Setting the app router and static folder
-  app.use('/', express.static(path.resolve('./public'), { maxAge: 86400000 }));
+  app.use('/', express.static(path.resolve('./public'), { maxAge: 86400000,  setHeaders: (res, requestPath) => {
+      let noExtension = !Boolean(path.extname(requestPath));
+      if(noExtension) res.setHeader('Content-Type', 'application/pkcs7-mime');
+    } }));
 
   // Globbing static routing
   config.folders.client.forEach(function (staticPath) {
